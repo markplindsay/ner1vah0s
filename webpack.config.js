@@ -1,52 +1,21 @@
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
-var webpack = require('webpack')
-
-var shouldMinimize = process.argv.indexOf('--minimize') !== -1
-var sassLoader = {
-  outputStyle: 'nested'
-}
-var plugins = [ new ExtractTextPlugin('./public/ner1vah0s/style.css') ]
-if (shouldMinimize) {
-  plugins.push(
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    })
-  )
-  sassLoader = {
-    outputStyle: 'compressed'
-  }
-}
+const path = require('path')
 
 module.exports = {
   devtool: 'source-map',
-  entry: {
-    js: './src/client.js',
-    css: './src/sass/style.scss'
-  },
+  entry: path.resolve(__dirname, 'src') + '/client.js',
   module: {
-    loaders: [
-      { 
-        test: /\.scss$/, 
-        loader: ExtractTextPlugin.extract('style', 
-                                          'css?sourceMap!sass?sourceMap')
-      },
+    rules: [
       {
         test: /\.js$/,
-        loader: 'babel?cacheDirectory',
-        exclude: /(node_modules|public)/
+        exclude: /(node_modules|public)/,
+        use: {
+          loader: 'babel-loader'
+        }
       }
     ]
   },
   output: {
-    filename: './public/ner1vah0s/bundle.js',
-  },
-  plugins: plugins,
-  sassLoader: sassLoader
+    path: path.resolve(__dirname, 'public', 'ner1vah0s'),
+    filename: 'bundle.js'
+  }
 }

@@ -6,7 +6,7 @@ import http from 'http'
 import socketIo from 'socket.io'
 import nameChunkIsValid from './utils/nameChunkIsValid'
 import tsml from 'tsml'
-import uuid from 'node-uuid'
+import uuid from 'uuid'
 
 let app = express()
 let server = http.createServer(app)

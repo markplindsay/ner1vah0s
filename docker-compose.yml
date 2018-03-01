@@ -1,0 +1,10 @@
+version: '3'
+services:
+  ner1vah0s:
+    entrypoint: ["nodemon", "src/ner1vah0s.js"]
+    image: ner1vah0s:latest
+    ports:
+      - '5000:5000'
+    volumes:
+      - .:/app
+      - /app/node_modules
