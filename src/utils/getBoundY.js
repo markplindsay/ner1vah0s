@@ -1,4 +1,4 @@
-export default function getBoundY (y, deltaY, chunkBcr, nameBcr, adjustment) {
+export default function getBoundY(y, deltaY, chunkBcr, nameBcr, adjustment) {
   let boundY = y + (deltaY / adjustment)
   const bottom = (nameBcr.height - chunkBcr.height) / adjustment
   const top = nameBcr.top / adjustment

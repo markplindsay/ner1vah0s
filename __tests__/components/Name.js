@@ -9,11 +9,18 @@ Enzyme.configure({ adapter: new Adapter() })
 
 describe('components/Name', () => {
 
-  test('should render correctly', () => {
+  test('should render correctly but without any letters', () => {
     let props = {
       adjustment: 1,
       handleNameChunkDrag: jest.fn(),
-      nameChunks: Immutable.Map(),
+      nameChunks: Immutable.Map({
+        n: Immutable.Map({
+          color: '#FF0000',
+          key: 'n',
+          x: 0,
+          y: 123
+        })
+      }),
       setNameEl: jest.fn(),
       xOffset: 256
     }
@@ -24,7 +31,7 @@ describe('components/Name', () => {
     expect(wrapper.props().className).toEqual('name')
     expect(wrapper.props().style.transform).toEqual('scale(1)')
     expect(wrapper.props().style.transformOrigin).toEqual('256px 0')
-    expect(wrapper.props().children.length).toBe(5)
+    expect(wrapper.props().children.length).toBe(1)
   })
 
   test('should render correctly when there has been a scale adjustment', () => {

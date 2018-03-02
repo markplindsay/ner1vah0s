@@ -1,9 +1,25 @@
 import Immutable from 'immutable'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import NameChunk from './NameChunk'
+import PropTypes from 'prop-types'
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 export default class Name extends React.Component {
+  static defaultProps = {
+    nameChunks: Immutable.Map(),
+  }
+  static propTypes = {
+    adjustment: PropTypes.number.isRequired,
+    handleNameChunkDrag: PropTypes.func.isRequired,
+    nameChunks: ImmutablePropTypes.mapOf(ImmutablePropTypes.contains({
+      color: PropTypes.string.isRequired,
+      key: PropTypes.string.isRequired,
+      x: PropTypes.number.isRequired,
+      y: PropTypes.number.isRequired,
+    })),
+    setNameEl: PropTypes.func.isRequired,
+    xOffset: PropTypes.number.isRequired,
+  }
   constructor() {
     super()
     this.componentDidMount = this.componentDidMount.bind(this)
@@ -11,27 +27,32 @@ export default class Name extends React.Component {
     this.render = this.render.bind(this)
   }
   componentDidMount() {
-    this.props.setNameEl(ReactDOM.findDOMNode(this))
+    this.props.setNameEl(this.el)
   }
   _getStyle() {
     return {
-      transform: 'scale(' + this.props.adjustment + ')',
-      transformOrigin: this.props.xOffset + 'px 0'
+      transform: `scale(${this.props.adjustment})`,
+      transformOrigin: `${this.props.xOffset}px 0`,
     }
   }
   render() {
+    let nameChunks = null
+    if (!this.props.nameChunks.isEmpty()) {
+      nameChunks = this.props.nameChunks.map(nameChunk => (
+        <NameChunk
+          handleDrag={this.props.handleNameChunkDrag}
+          key={nameChunk.get('key')}
+          nameChunk={nameChunk}
+        />
+      )).toArray()
+    }
     return (
-      <div className='name' style={this._getStyle()}>
-        <NameChunk handleDrag={this.props.handleNameChunkDrag}
-                   nameChunk={this.props.nameChunks.get('n')} /> 
-        <NameChunk handleDrag={this.props.handleNameChunkDrag}
-                   nameChunk={this.props.nameChunks.get('er1')} />
-        <NameChunk handleDrag={this.props.handleNameChunkDrag}
-                   nameChunk={this.props.nameChunks.get('v')} />
-        <NameChunk handleDrag={this.props.handleNameChunkDrag} 
-                   nameChunk={this.props.nameChunks.get('ah0')} />
-        <NameChunk handleDrag={this.props.handleNameChunkDrag} 
-                   nameChunk={this.props.nameChunks.get('s')} />
+      <div
+        className="name"
+        style={this._getStyle()}
+        ref={(el) => { this.el = el }}
+      >
+        {nameChunks}
       </div>
     )
   }

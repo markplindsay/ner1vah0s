@@ -31,15 +31,6 @@ describe('components/NameChunk', () => {
     })
   })
 
-  test('should not render when nameChunk is undefined', () => {
-    let props = {
-      handleDrag: jest.fn(),
-      nameChunk: undefined
-    }
-    const wrapper = Enzyme.shallow(<NameChunk {...props} />)
-    expect(wrapper.html()).toBeNull()
-  })
-
   test('should set its internal state on mount and again on new props', () => {
     const props = {
       handleDrag: jest.fn(),

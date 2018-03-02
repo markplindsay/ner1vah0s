@@ -1,18 +1,17 @@
-export default function (target) {
-  'use strict'
+export default function objectAssign(target, ...args) {
   if (target === undefined || target === null) {
     throw new TypeError('Cannot convert undefined or null to object')
   }
-
-  var output = Object(target)
-  for (var index = 1; index < arguments.length; index++) {
-    var source = arguments[index]
+  const output = Object(target)
+  for (let index = 0; index < args.length; index += 1) {
+    const source = args[index]
     if (source !== undefined && source !== null) {
-      for (var nextKey in source) {
-        if (source.hasOwnProperty(nextKey)) {
-          output[nextKey] = source[nextKey]
+      Object.keys(source).forEach((nextKey) => {
+        if (!Object.prototype.hasOwnProperty.call(source, nextKey)) {
+          return
         }
-      }
+        output[nextKey] = source[nextKey]
+      })
     }
   }
   return output

@@ -1,29 +1,29 @@
+import actions from './actions'
+import App from './containers/App'
+import { applyMiddleware, createStore } from 'redux'
+import createSocketIoMiddleware from 'redux-socket.io'
+import io from 'socket.io-client'
+import { Provider } from 'react-redux'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import { applyMiddleware, createStore } from 'redux'
-import thunk from 'redux-thunk'
-import actions from './actions'
 import reducer from './reducers'
-import App from './containers/App'
-import io from 'socket.io-client'
-import createSocketIoMiddleware from 'redux-socket.io'
+import thunk from 'redux-thunk'
 
 let url = '/'
 if (config.NER1VAH0S_URL !== undefined) {
   url = config.NER1VAH0S_URL
 }
 
-let socket = io.connect(url)
-let socketIoMiddleware = createSocketIoMiddleware(socket, 'server/')
+const socket = io.connect(url)
+const socketIoMiddleware = createSocketIoMiddleware(socket, 'server/')
 
-let store = applyMiddleware(thunk, socketIoMiddleware)(createStore)(reducer)
+const store = applyMiddleware(thunk, socketIoMiddleware)(createStore)(reducer)
 
 ReactDOM.render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('mount')
+  document.getElementById('mount'),
 )
 
 document.ontouchmove = (event) => {
