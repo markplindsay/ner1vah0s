@@ -1,20 +1,19 @@
-import chai from 'chai'
+import Adapter from 'enzyme-adapter-react-16'
+import Enzyme from 'enzyme'
 import { DraggableCore } from 'react-draggable'
 import Immutable from 'immutable'
-import jsdom from 'mocha-jsdom'
 import NameChunk from '../../src/components/NameChunk'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import sinon from 'sinon'
-import TestUtils from 'react-addons-test-utils'
+import TestUtils from 'react-dom/test-utils'
+
+Enzyme.configure({ adapter: new Adapter() })
 
 describe('components/NameChunk', () => {
   
-  jsdom()
-
-  it('should render correctly', () => {
+  test('should render correctly', () => {
     let props = {
-      handleDrag: sinon.spy(),
+      handleDrag: jest.fn(),
       nameChunk: Immutable.Map({
         color: '#FF0000',
         key: 'n',
@@ -22,33 +21,28 @@ describe('components/NameChunk', () => {
         y: 123
       })
     }
-    let renderer = TestUtils.createRenderer()
-    renderer.render(<NameChunk {...props} />)
-    const output = renderer.getRenderOutput()
-    chai.assert.equal(output.type, DraggableCore)
-    chai.assert.equal(output.props.children.props.className, 
-                      'name-chunk name-chunk-n')
-    chai.assert.equal(output.props.children.props.children, 'N')
-    chai.assert.deepEqual(output.props.children.props.style, {
+    const wrapper = Enzyme.shallow(<NameChunk {...props} />)
+    expect(wrapper.type()).toEqual(DraggableCore)
+    expect(wrapper.find('.name-chunk.name-chunk-n').length).toEqual(1)
+    expect(wrapper.find('.name-chunk.name-chunk-n').text()).toEqual('N')
+    expect(wrapper.find('.name-chunk.name-chunk-n').props().style).toEqual({
       color: '#FF0000',
       transform: 'translate(0px, 123px)'
     })
   })
 
-  it('should not render when nameChunk is undefined', () => {
+  test('should not render when nameChunk is undefined', () => {
     let props = {
-      handleDrag: sinon.spy(),
+      handleDrag: jest.fn(),
       nameChunk: undefined
     }
-    let renderer = TestUtils.createRenderer()
-    renderer.render(<NameChunk {...props} />)
-    const output = renderer.getRenderOutput()
-    chai.assert.isNull(output)
+    const wrapper = Enzyme.shallow(<NameChunk {...props} />)
+    expect(wrapper.html()).toBeNull()
   })
 
-  it('should set its internal state on mount and again on new props', () => {
+  test('should set its internal state on mount and again on new props', () => {
     const props = {
-      handleDrag: sinon.spy(),
+      handleDrag: jest.fn(),
       nameChunk: Immutable.Map({
         color: '#FF0000',
         key: 'n',
@@ -56,8 +50,8 @@ describe('components/NameChunk', () => {
         y: 123
       })
     }
-    const output = TestUtils.renderIntoDocument(<NameChunk {...props} />)
-    chai.assert.deepEqual(output.state, {
+    const wrapper = Enzyme.shallow(<NameChunk {...props} />)
+    expect(wrapper.state()).toEqual({
       style: {
         color: '#FF0000',
         transform: 'translate(0px, 123px)'
@@ -66,7 +60,7 @@ describe('components/NameChunk', () => {
       y: 123
     })
     const newProps = {
-      handleDrag: sinon.spy(),
+      handleDrag: jest.fn(),
       nameChunk: Immutable.Map({
         color: '#000000',
         key: 'n',
@@ -74,9 +68,8 @@ describe('components/NameChunk', () => {
         y: 123
       })
     }
-    const newOutput = TestUtils.renderIntoDocument(
-                      <NameChunk {...newProps} />)
-    chai.assert.deepEqual(newOutput.state, {
+    const newWrapper = Enzyme.shallow(<NameChunk {...newProps} />)
+    expect(newWrapper.state()).toEqual({
       style: {
         color: '#000000',
         transform: 'translate(5px, 123px)'
@@ -86,9 +79,10 @@ describe('components/NameChunk', () => {
     })
   })
 
-  it('should call props.handleDrag on drag', () => {
+  test('should call props.handleDrag on drag', () => {
+    const handleDrag = jest.fn()
     const props = {
-      handleDrag: sinon.spy(),
+      handleDrag: handleDrag,
       nameChunk: Immutable.Map({
         color: '#FF0000',
         key: 'n',
@@ -104,6 +98,6 @@ describe('components/NameChunk', () => {
                      false, false, false, false, 0, null)
     document.dispatchEvent(e)
     TestUtils.Simulate.mouseUp(node)
-    chai.assert.isTrue(props.handleDrag.calledOnce)
+    expect(handleDrag.mock.calls.length).toBe(1)
   })
 })

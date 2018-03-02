@@ -1,16 +1,15 @@
 import C from '../../src/constants'
-import chai from 'chai'
 import getBoundX from '../../src/utils/getBoundX'
 
 describe('utils/getBoundX', () => {
 
-  it('returns a number', () => {
+  test('returns a number', () => {
     const chunkBcr = { left: 0, right: 0 }
     const nameBcr = { left: 0, right: 0 }
-    chai.assert.isNumber(getBoundX(0, 1, chunkBcr, nameBcr, 1))
+    expect(typeof getBoundX(0, 1, chunkBcr, nameBcr, 1)).toBe('number')
   })
 
-  it('returns unadjusted x', () => {
+  test('returns unadjusted x', () => {
     const x = 0
     const deltaX = 687.96875
     const chunkBcr = { left: 894.96875, right: 975 }
@@ -18,10 +17,10 @@ describe('utils/getBoundX', () => {
     const adjustment = 1
     const actual = getBoundX(x, deltaX, chunkBcr, nameBcr, adjustment)
     const expected = 687.96875
-    chai.assert.equal(actual, expected)
+    expect(actual).toEqual(expected)
   })
 
-  it('returns adjusted x', () => {
+  test('returns adjusted x', () => {
     const x = 0
     const deltaX = 690.01675
     const chunkBcr = { left: 335.9222412109375, right: 375 }
@@ -29,7 +28,7 @@ describe('utils/getBoundX', () => {
     const adjustment = 0.48828125
     const actual = getBoundX(x, deltaX, chunkBcr, nameBcr, adjustment)
     const expected = 687.96875
-    chai.assert.equal(actual, expected)
+    expect(actual).toEqual(expected)
   })
 
 })

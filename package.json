@@ -5,7 +5,7 @@
   "author": "Mark P Lindsay <mark@nervous.org>",
   "scripts": {
     "build": "webpack --mode production",
-    "test": "mocha --compilers js:babel-core/register --recursive test",
+    "test": "jest",
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
@@ -27,7 +27,11 @@
     "uuid": "^3.2.1"
   },
   "devDependencies": {
+    "babel-jest": "^22.4.1",
     "babel-loader": "^7.1.3",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "redux-mock-store": "^1.5.1",
     "webpack": "^4.0.1",
     "webpack-cli": "^2.0.9"
   }

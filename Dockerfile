@@ -3,6 +3,9 @@ FROM mhart/alpine-node:latest
 # Install nodemon for use with docker-compose.
 RUN yarn global add nodemon
 
+# And jest.
+RUN yarn global add jest
+
 # Create app directory.
 RUN mkdir -p /app
 WORKDIR /app

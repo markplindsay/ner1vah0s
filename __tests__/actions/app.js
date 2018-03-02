@@ -1,28 +1,21 @@
 import appActions from '../../src/actions/app'
 import C from '../../src/constants'
-import chai from 'chai'
-import chaiImmutable from 'chai-immutable'
 import configureMockStore from 'redux-mock-store'
 import Immutable from 'immutable'
-import jsdom from 'mocha-jsdom'
 import thunk from 'redux-thunk'
-
-chai.use(chaiImmutable)
 
 const middlewares = [ thunk ]
 const mockStore = configureMockStore(middlewares)
 
 describe('actions/app', () => {
 
-  jsdom()
-
-  before(function () {
+  beforeAll(function () {
     global.config = {
       NER1VAH0S_ACTION_KEY: 'hello'
     }
   })
 
-  it('should create an action for handleNameChunkDrag', () => {
+  test('should create an action for handleNameChunkDrag', () => {
     const nameEl = document.createElement('div')
     const store = mockStore(Immutable.Map({
       app: Immutable.Map({
@@ -40,15 +33,15 @@ describe('actions/app', () => {
       deltaY: 128
     }))
     const actions = store.getActions()
-    chai.assert.equal(actions[0].key, 'hello')
-    chai.assert.equal(actions[0].type, C.NAME_CHUNK_DRAGGED)
-    chai.assert.lengthOf(actions[0].payload.get('color'), 7)
-    chai.assert.equal(actions[0].payload.get('key'), 'n')
-    chai.assert.equal(actions[0].payload.get('x'), 0)
-    chai.assert.equal(actions[0].payload.get('y'), 0)
+    expect(actions[0].key).toEqual('hello')
+    expect(actions[0].type).toEqual(C.NAME_CHUNK_DRAGGED)
+    expect(actions[0].payload.get('color').length).toBe(7)
+    expect(actions[0].payload.get('key')).toEqual('n')
+    expect(actions[0].payload.get('x')).toEqual(0)
+    expect(actions[0].payload.get('y')).toEqual(0)
   })
   
-  it('should create an action for setNameEl', () => {
+  test('should create an action for setNameEl', () => {
     const el = { fakeHtmlElementObject: 'something' }
     const expected = {
       type: C.NAME_EL_SET,
@@ -57,10 +50,10 @@ describe('actions/app', () => {
       })
     }
     // We need to use deepEqual here due to the Immutable.Map.
-    chai.assert.deepEqual(appActions.setNameEl(el), expected)
+    expect(appActions.setNameEl(el)).toEqual(expected)
   })
 
-  it('should create an action for setWindowSize', () => {
+  test('should create an action for setWindowSize', () => {
     const expected = {
       type: C.WINDOW_RESIZED,
       payload: Immutable.Map({
@@ -68,6 +61,6 @@ describe('actions/app', () => {
         xOffset: 0
       })
     }
-    chai.assert.deepEqual(appActions.setWindowSize(667, 375), expected)
+    expect(appActions.setWindowSize(667, 375)).toEqual(expected)
   })
 })

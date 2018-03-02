@@ -1,11 +1,6 @@
 import appReducer from '../../src/reducers/app'
 import C from '../../src/constants'
-import chai from 'chai'
-import chaiImmutable from 'chai-immutable'
 import Immutable from 'immutable'
-import jsdom from 'mocha-jsdom'
-
-chai.use(chaiImmutable)
 
 const STATE_1 = Immutable.Map({
   adjustment: 1,
@@ -49,23 +44,21 @@ const STATE_2 = Immutable.Map({
 
 describe('reducers/app', () => {
 
-  jsdom()
-
-  it('returns the initial state with undefined state and no action', () => {
+  test('returns the initial state with undefined state and no action', () => {
     const state = undefined
     const action = {}
     const expected = STATE_1
-    chai.assert.equal(appReducer(state, action), expected)
+    expect(appReducer(state, action)).toEqual(expected)
   })
 
-  it('returns the passed-in state with no action', () => {
+  test('returns the passed-in state with no action', () => {
     const state = STATE_2
     const action = {}
     const expected = state
-    chai.assert.equal(appReducer(state, action), expected)
+    expect(appReducer(state, action)).toEqual(expected)
   })
 
-  it(C.NAME_CHUNK_DRAGGED, () => {
+  test(C.NAME_CHUNK_DRAGGED, () => {
     const state = STATE_2
     const action = {
       payload: Immutable.Map({
@@ -81,10 +74,10 @@ describe('reducers/app', () => {
       x: 0,
       y: 123
     }))
-    chai.assert.equal(appReducer(state, action), expected)
+    expect(appReducer(state, action)).toEqual(expected)
   })
 
-  it(C.NAME_CHUNK_MOVED, () => {
+  test(C.NAME_CHUNK_MOVED, () => {
     const state = STATE_2
     const action = {
       payload: {
@@ -100,10 +93,10 @@ describe('reducers/app', () => {
       x: 0,
       y: 123
     }))
-    chai.assert.equal(appReducer(state, action), expected)
+    expect(appReducer(state, action)).toEqual(expected)
   })
 
-  it(C.NAME_CHUNKS_SET, () => {
+  test(C.NAME_CHUNKS_SET, () => {
     const state = STATE_1
     const action = {
       payload: {
@@ -138,10 +131,10 @@ describe('reducers/app', () => {
       type: C.NAME_CHUNKS_SET
     }
     const expected = STATE_2
-    chai.assert.equal(appReducer(state, action), expected)
+    expect(appReducer(state, action)).toEqual(expected)
   })
 
-  it(C.NAME_EL_SET, () => {
+  test(C.NAME_EL_SET, () => {
     const state = STATE_1
     const divEl = document.createElement('div')
     const action = {
@@ -151,10 +144,10 @@ describe('reducers/app', () => {
       type: C.NAME_EL_SET
     }
     const expected = state.set('nameEl', divEl)
-    chai.assert.equal(appReducer(state, action), expected)
+    expect(appReducer(state, action)).toEqual(expected)
   })
 
-  it(C.WINDOW_RESIZED, () => {
+  test(C.WINDOW_RESIZED, () => {
     const state = STATE_1
     const action = {
       payload: Immutable.Map({
@@ -167,6 +160,6 @@ describe('reducers/app', () => {
       adjustment: 0.48828125,
       xOffset: 0
     })
-    chai.assert.equal(appReducer(state, action), expected)
+    expect(appReducer(state, action)).toEqual(expected)
   })
 })
