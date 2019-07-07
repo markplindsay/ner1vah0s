@@ -1,27 +1,14 @@
-import { Request, Response } from 'express'
+// import { NextContext } from 'next'
 import Head from 'next/head'
 import React from 'react'
-import { connect } from 'react-redux'
-import { Store } from 'redux'
 import Name from '../components/Name'
-import { Chunks, ChunksWereSet } from '../types'
-import { getChunks } from '../utils'
-
-// type InitialProps = {
-//   req: Request,
-// }
+import { Chunks } from '../types'
 
 type Props = {
-  asPath: string
-  isServer: boolean
-  pathname: string
-  query: any
-  req: Request
-  res: Response
-  store: Store
+  chunks: Chunks
 }
 
-const Index = () => (
+const Index = (props: Props) => (
   <>
     <Head>
       <meta
@@ -30,17 +17,13 @@ const Index = () => (
       />
       <title>N ER1 V AH0 S</title>
     </Head>
-    <Name />
+    <Name chunks={props.chunks} />
   </>
 )
-Index.getInitialProps = (props: Props): any => {
-  const chunks: Chunks = getChunks()
-  const chunksWereSet: ChunksWereSet = {
-    payload: chunks,
-    type: 'CHUNKS_WERE_SET',
+Index.getInitialProps = (ctx: any): any => {
+  return {
+    chunks: ctx.req.chunks,
   }
-  props.store.dispatch(chunksWereSet)
-  return {}
 }
 
-export default connect()(Index)
+export default Index

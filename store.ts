@@ -27,8 +27,8 @@ const reducer = (
 ): State => {
   console.log(action)
   switch (action.type) {
-    case 'server/CHUNK_WAS_DRAGGED':
-    // case 'CHUNK_WAS_MOVED':
+    case 'CHUNK_WAS_DRAGGED':
+    case 'CHUNK_WAS_MOVED':
       return {
         ...state,
         chunks: {

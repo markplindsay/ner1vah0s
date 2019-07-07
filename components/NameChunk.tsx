@@ -1,10 +1,10 @@
 import { DraggableCore, DraggableEventHandler } from 'react-draggable'
 import React, { useRef } from 'react'
-import { Chunk } from '../types'
+import { Chunk, DraggedChunk } from '../types'
 
 type Props = {
   chunk?: Chunk
-  handleDrag: (chunk: Chunk) => void
+  onDrag: (draggedChunk: DraggedChunk) => void
 }
 
 const NameChunk = (props: Props) => {
@@ -33,7 +33,7 @@ const NameChunk = (props: Props) => {
   const handleDrag: DraggableEventHandler = (_event, ui) => {
     const el = ref.current
     if (el !== null && props.chunk !== undefined) {
-      const draggedChunk: Chunk = {
+      const draggedChunk: DraggedChunk = {
         key: props.chunk.key,
         el,
         x: props.chunk.x,
@@ -41,7 +41,7 @@ const NameChunk = (props: Props) => {
         deltaX: ui.deltaX,
         deltaY: ui.deltaY,
       }
-      props.handleDrag(draggedChunk)
+      props.onDrag(draggedChunk)
     }
   }
   // _setStyle(props) {
@@ -61,9 +61,6 @@ const NameChunk = (props: Props) => {
   // }
   if (props.chunk === undefined) {
     return null
-  }
-  if (props.chunk.key === 'ah0') {
-    console.log(props.chunk.x, props.chunk.y)
   }
   return (
     <DraggableCore onDrag={handleDrag}>
