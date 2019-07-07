@@ -1,48 +1,66 @@
 {
-  "name": "ner1vah0s",
-  "version": "3.0.0",
-  "description": "N ER1 V AH0 S",
   "author": "Mark P Lindsay <mark@nervous.org>",
-  "scripts": {
-    "build": "webpack --mode production",
-    "test": "jest",
-    "watch": "webpack --mode development --watch"
+  "bugs": {
+    "url": "https://github.com/markplindsay/ner1vah0s/issues"
   },
+  "description": "N ER1 V AH0 S",
   "dependencies": {
-    "babel-core": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1",
-    "express": "^4.16.2",
-    "immutable": "^3.8.2",
-    "prop-types": "^15.6.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-draggable": "^3.0.5",
-    "react-immutable-proptypes": "^2.1.0",
-    "react-redux": "^5.0.7",
-    "redux": "^3.7.2",
-    "redux-immutable": "^4.0.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "nanoid": "^2.0.3",
+    "next": "^8.1.0",
+    "next-redux-wrapper": "^3.0.0-alpha.3",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-draggable": "^3.3.0",
+    "react-redux": "^7.1.0",
+    "redux": "^4.0.1",
     "redux-socket.io": "^1.4.0",
-    "redux-thunk": "^2.2.0",
-    "socket.io": "^2.0.4",
-    "socket.io-client": "^2.0.4",
-    "tsml": "^1.0.1",
-    "uuid": "^3.2.1"
+    "redux-thunk": "^2.3.0",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.2",
-    "babel-jest": "^22.4.1",
-    "babel-loader": "^7.1.3",
-    "enzyme": "^3.3.0",
-    "enzyme-adapter-react-16": "^1.1.1",
-    "eslint": "^4.18.1",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-loader": "^2.0.0",
-    "eslint-plugin-import": "^2.9.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.7.0",
-    "redux-mock-store": "^1.5.1",
-    "webpack": "^4.0.1",
-    "webpack-cli": "^2.0.9"
-  }
+    "@types/enzyme": "^3.9.4",
+    "@types/enzyme-adapter-react-16": "^1.0.5",
+    "@types/express": "^4.17.0",
+    "@types/jest": "^24.0.15",
+    "@types/next": "^8.0.5",
+    "@types/node": "^12.0.10",
+    "@types/react": "^16.8.22",
+    "@types/react-dom": "^16.8.4",
+    "@types/react-redux": "^7.1.1",
+    "@types/redux-socket.io": "^1.4.0",
+    "@types/socket.io": "^2.1.2",
+    "@types/socket.io-client": "^1.4.32",
+    "@zeit/next-typescript": "^1.1.1",
+    "babel-jest": "^24.8.0",
+    "cross-env": "^5.2.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "jest": "^24.8.0",
+    "nodemon": "^1.19.1",
+    "redux-devtools-extension": "^2.13.8",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.2"
+  },
+  "homepage": "https://github.com/markplindsay/ner1vah0s",
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>setupTests.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
+    ]
+  },
+  "main": "dist/server/index.js",
+  "name": "ner1vah0s",
+  "scripts": {
+    "build": "next build && tsc --project tsconfig.server.json",
+    "dev": "nodemon",
+    "start": "cross-env NODE_ENV=production node dist/server/index.js",
+    "test": "tsc && jest"
+  },
+  "version": "4.0.0"
 }
