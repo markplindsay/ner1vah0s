@@ -1,10 +1,23 @@
-version: '3'
+version: "3"
 services:
   ner1vah0s:
-    entrypoint: ["nodemon", "src/ner1vah0s.js"]
-    image: ner1vah0s:latest
+    build: .
+    command: ["npm", "run", "dev"]
+    environment:
+      - "NODE_ENV=development"
     ports:
-      - '5000:5000'
+      - "5000:5000"
+    links:
+      - "datadog-agent:datadog-agent"
+  datadog-agent:
+    image: datadog/docker-dd-agent
+    environment:
+      - "DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true"
+      - "DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL=true"
+      - "DD_LOGS_ENABLED=true"
+    env_file:
+      - "./.env"
     volumes:
-      - .:/app
-      - /app/node_modules
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro

@@ -1,6 +1,7 @@
-import getRandomColor from './getRandomColor'
+import { Chunks } from '../types'
+import { getRandomColor } from '../utils'
 
-export default function getNameChunks () {
+const getChunks = (): Chunks => {
   return {
     n: {
       color: getRandomColor(),
@@ -34,3 +35,5 @@ export default function getNameChunks () {
     }
   }
 }
+
+export const chunks: Chunks = getChunks() 

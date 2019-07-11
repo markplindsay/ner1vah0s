@@ -1,10 +1,3 @@
-import { Chunks } from './types'
-
-export const keyIsValid = (key: string): boolean => {
-  const validKeys = ['n', 'er1', 'v', 'ah0', 's']
-  return validKeys.indexOf(key) !== -1
-}
-
 export const getBoundX = (
   x: number,
   deltaX: number,
@@ -35,41 +28,6 @@ export const getBoundY = (
   boundY = Math.min(boundY, bottom)
   boundY = Math.max(boundY, top)
   return boundY
-}
-
-export const getChunks = (): Chunks => {
-  return {
-    n: {
-      color: getRandomColor(),
-      key: 'n',
-      x: 0,
-      y: 0
-    },
-    er1: {
-      color: getRandomColor(),
-      key: 'er1',
-      x: 110,
-      y: 0
-    },
-    v: {
-      color: getRandomColor(),
-      key: 'v',
-      x: 348,
-      y: 0
-    },
-    ah0: {
-      color: getRandomColor(),
-      key: 'ah0',
-      x: 446,
-      y: 0
-    },
-    s: {
-      color: getRandomColor(),
-      key: 's',
-      x: 690,
-      y: 0
-    }
-  }
 }
 
 export const getRandomColor = (): string => {

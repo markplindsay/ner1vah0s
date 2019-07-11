@@ -1,5 +1,5 @@
 import { DraggableCore, DraggableEventHandler } from 'react-draggable'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Chunk, DraggedChunk } from '../types'
 
 type Props = {
@@ -8,34 +8,15 @@ type Props = {
 }
 
 const NameChunk = (props: Props) => {
-  const ref = useRef(null)
-  // const [style, setStyle] = useState({
-  //   color: 'transparent',
-  //   transform: 'translate(0px, 0px)',
-  // })
-
-  // constructor() {
-   //  super()
-   //  this.state = {
-   //    style: {
-   //      transform: 'translate(0px, 0px)',
-   //    },
-   //    x: 0,
-   //    y: 0,
-   //  }
-   //  this._getClassName = this._getClassName.bind(this)
-   //  this._handleDrag = this._handleDrag.bind(this)
-   //  this._setStyle = this._setStyle.bind(this)
-   //  this.componentWillMount = this.componentWillMount.bind(this)
-   //  this.componentWillReceiveProps = this.componentWillReceiveProps.bind(this)
-   //  this.render = this.render.bind(this)
-  // }
+  const [isDragging, setIsDragging] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
   const handleDrag: DraggableEventHandler = (_event, ui) => {
     const el = ref.current
     if (el !== null && props.chunk !== undefined) {
+      const bcr = el.getBoundingClientRect()
       const draggedChunk: DraggedChunk = {
         key: props.chunk.key,
-        el,
+        bcr,
         x: props.chunk.x,
         y: props.chunk.y,
         deltaX: ui.deltaX,
@@ -44,31 +25,29 @@ const NameChunk = (props: Props) => {
       props.onDrag(draggedChunk)
     }
   }
-  // _setStyle(props) {
-   //  if (props.nameChunk === undefined) {
-   //    return
-   //  }
-   //  const x = props.nameChunk.get('x')
-   //  const y = props.nameChunk.get('y')
-   //  this.setState({
-   //    style: {
-   //      color: props.nameChunk.get('color'),
-   //      transform: `translate(${x}px, ${y}px)`,
-   //    },
-   //    x,
-   //    y,
-   //  })
-  // }
   if (props.chunk === undefined) {
     return null
   }
+  let cursor = 'grab'
+  if (isDragging) {
+    cursor = 'grabbing'
+  }
+  const handleStart: DraggableEventHandler = () => {
+    setIsDragging(true)
+  }
+  const handleStop: DraggableEventHandler = () => {
+    setIsDragging(false)
+  }
   return (
-    <DraggableCore onDrag={handleDrag}>
+    <DraggableCore
+      onDrag={handleDrag}
+      onStart={handleStart}
+      onStop={handleStop}
+    >
       <span className={`chunk chunk-${props.chunk.key}`} ref={ref}>
         {props.chunk.key.toUpperCase()}
         <style jsx>{`
           display: block;
-          transition: opacity 250ms;
           position: absolute;
           cursor: default;
           -webkit-touch-callout: none;
@@ -78,16 +57,11 @@ const NameChunk = (props: Props) => {
           -ms-user-select: none;
           user-select: none;
           cursor: move;
-          cursor: grab;
-          cursor: -moz-grab;
-          cursor: -webkit-grab;
+          cursor: ${cursor};
+          cursor: -moz-${cursor};
+          cursor: -webkit-${cursor};
           color: ${props.chunk.color};
           transform: translate(${props.chunk.x}px, ${props.chunk.y}px);
-          &:active {
-            cursor: grabbing;
-            cursor: -moz-grabbing;
-            cursor: -webkit-grabbing;
-          }
        `}</style> 
       </span>
     </DraggableCore>

@@ -1,11 +1,10 @@
-// import { NextContext } from 'next'
 import Head from 'next/head'
 import React from 'react'
 import Name from '../components/Name'
-import { Chunks } from '../types'
+import { Chunks, PageContext } from '../types'
 
 type Props = {
-  chunks: Chunks
+  chunks?: Chunks
 }
 
 const Index = (props: Props) => (
@@ -17,13 +16,24 @@ const Index = (props: Props) => (
       />
       <title>N ER1 V AH0 S</title>
     </Head>
-    <Name chunks={props.chunks} />
+    {props.chunks &&
+      <Name chunks={props.chunks} />
+    }
+    <style global jsx>{`
+      body {
+        background: white;
+        margin: 0;
+      }
+    `}</style>
   </>
 )
-Index.getInitialProps = (ctx: any): any => {
-  return {
-    chunks: ctx.req.chunks,
+Index.getInitialProps = (pageContext: PageContext): Props => {
+  if (pageContext.req !== undefined) {
+    return {
+      chunks: pageContext.req.chunks,
+    }
   }
+  return {}
 }
 
 export default Index

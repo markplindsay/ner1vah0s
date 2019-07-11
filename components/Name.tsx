@@ -6,6 +6,7 @@ import {
   Chunk,
   Chunks,
   ChunkWasDragged,
+  ChunkWasMoved,
   DraggedChunk,
   State,
   WindowWasResized,
@@ -24,8 +25,7 @@ const chunkWasDragged = (
   adjustment: number,
   nameEl: HTMLDivElement,
 ): ChunkWasDragged => {
-  const chunkBcr: ClientRect = draggedChunk.el.getBoundingClientRect()
-  const nameBcr: ClientRect = nameEl.getBoundingClientRect()
+  const nameBcr = nameEl.getBoundingClientRect()
   const action: ChunkWasDragged = {
     payload: {
       color: getRandomColor(),
@@ -33,23 +33,33 @@ const chunkWasDragged = (
       x: getBoundX(
         draggedChunk.x,
         draggedChunk.deltaX,
-        chunkBcr,
+        draggedChunk.bcr,
         nameBcr,
         adjustment,
       ),
       y: getBoundY(
         draggedChunk.y,
         draggedChunk.deltaY,
-        chunkBcr,
+        draggedChunk.bcr,
         nameBcr,
         adjustment,
       ),
     },
     type: 'CHUNK_WAS_DRAGGED',
   }
+  socket.emit('action', action)
   return action
 }
 
+const chunkWasMoved = (
+  chunk: Chunk,
+): ChunkWasMoved => {
+  const action: ChunkWasMoved = {
+    payload: chunk,
+    type: 'CHUNK_WAS_MOVED',
+  }
+  return action
+}
 
 const windowWasResized = (h: number, w: number): WindowWasResized => {
   const height = Math.min(BASE_LENGTH, h)
@@ -67,7 +77,7 @@ const windowWasResized = (h: number, w: number): WindowWasResized => {
   return action
 }
 
-function reducer(state: State, action: Actions) {
+const reducer = (state: State, action: Actions): State => {
   switch (action.type) {
     case 'CHUNK_WAS_DRAGGED':
     case 'CHUNK_WAS_MOVED':
@@ -94,7 +104,6 @@ function reducer(state: State, action: Actions) {
   }
 }
 
-
 const Name = (props: Props) => {
   const ref = useRef<HTMLDivElement>(null)
   const initialState: State = {
@@ -103,17 +112,17 @@ const Name = (props: Props) => {
     xOffset: 256,
   }
   const [state, dispatch] = useReducer(reducer, initialState)
-  const handleSocketEvent = (data: any) => {
-    console.log('handleSocketEvent, data = ', data)
+  const handleSocketEvent = (action: ChunkWasMoved) => {
+    dispatch(chunkWasMoved(action.payload))
   }
   const handleWindowResize = () => {
     dispatch(windowWasResized(window.innerHeight, window.innerWidth))
   }
   useEffect(() => {
-    socket.on('event', handleSocketEvent)
+    socket.on('action', handleSocketEvent)
     window.addEventListener('resize', handleWindowResize)
     return () => {
-      socket.off('event', handleSocketEvent)
+      socket.off('action', handleSocketEvent)
       window.removeEventListener('resize', handleWindowResize)
     }
   })
@@ -141,7 +150,7 @@ const Name = (props: Props) => {
             key={chunk.key}
             onDrag={handleDrag}
           />
-          )
+        )
       })}
       <style jsx>{`
         display: block;
@@ -161,52 +170,3 @@ const Name = (props: Props) => {
 }
 
 export default Name
-
-// export default class Name extends React.Component {
-//   static defaultProps = {
-//     nameChunks: Immutable.Map(),
-//   }
-//   static propTypes = {
-//     adjustment: PropTypes.number.isRequired,
-//     handleNameChunkDrag: PropTypes.func.isRequired,
-//     nameChunks: ImmutablePropTypes.mapOf(ImmutablePropTypes.contains({
-//       color: PropTypes.string.isRequired,
-//       key: PropTypes.string.isRequired,
-//       x: PropTypes.number.isRequired,
-//       y: PropTypes.number.isRequired,
-//     })),
-//     setNameEl: PropTypes.func.isRequired,
-//     xOffset: PropTypes.number.isRequired,
-//   }
-//   constructor() {
-//     super()
-//     this.componentDidMount = this.componentDidMount.bind(this)
-//     this._getStyle = this._getStyle.bind(this)
-//     this.render = this.render.bind(this)
-//   }
-//   componentDidMount() {
-//     this.props.setNameEl(this.el)
-//   }
-//   _getStyle() {
-//     return {
-//       transform: `scale(${this.props.adjustment})`,
-//       transformOrigin: `${this.props.xOffset}px 0`,
-//     }
-//   }
-//   render() {
-//     let nameChunks = null
-//     if (!this.props.nameChunks.isEmpty()) {
-//       nameChunks = this..toArray()
-//     }
-//     return (
-//       <div
-//         className="name"
-//         style={this._getStyle()}
-//         ref={(el) => { this.el = el }}
-//       >
-//         {nameChunks}
-//       </div>
-//     )
-//   }
-// }
-

@@ -4,19 +4,18 @@ import http from 'http'
 import next from 'next'
 import socketIo from 'socket.io'
 import { parse } from 'url'
-import { Actions, Chunks } from '../types'
-import { getChunks } from '../utils'
+import { chunks } from './chunks'
+import { morganMiddleware } from './logging'
+import { handleSocketConnect } from './socket'
 
 const port = parseInt(process.env.PORT || '5000', 10)
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
-let chunks: Chunks = getChunks()
-console.log('chunks = ', chunks)
-
 app.prepare().then(() => {
   const expressApp = express()
+  expressApp.use(morganMiddleware())
   expressApp.get('/', (req, res) => {
     req.chunks = chunks
     return app.render(req, res, '/', req.query)
@@ -28,39 +27,11 @@ app.prepare().then(() => {
   const server = http.createServer(expressApp)
   let io = socketIo()
   io.attach(server)
-  io.on('connection', (socket) => {
-    socket.on('action', (action: Actions) => {
-      console.log('socket action = ', action)
-      // if (action.type === 'server/CHUNK_WAS_DRAGGED') {
-      // //   // if (!nameChunkIsValid(action.payload, nameChunks)) {
-      // //   //   return
-      // //   // }
-      //   if (action.payload.key === 'n'
-      //     || action.payload.key === 'er1'
-      //     || action.payload.key === 'v'
-      //     || action.payload.key === 'ah0'
-      //     || action.payload.key === 's') {
-      //     const chunkWasMoved: ChunkWasMoved = {
-      //       payload: {
-      //         color: action.payload.color,
-      //         key: action.payload.key,
-      //         x: action.payload.x,
-      //         y: action.payload.y
-      //       },
-      //       type: 'CHUNK_WAS_MOVED',
-      //     }
-      //     console.log('emitting ', chunkWasMoved)
-      //     socket.emit('action', chunkWasMoved)
-      //   }
-      // }
-    })
-  })
+  io.on('connect', handleSocketConnect)
   server.listen(port, () => {
-    console.log(
-      `> Server listening on ${port} as ${
-        dev ? 'development' : process.env.NODE_ENV
-      }`
-    )
+    if (dev) {
+      console.log(`> Server listening on ${port} as development`)
+    }
   })
 })
 
