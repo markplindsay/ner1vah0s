@@ -48,38 +48,22 @@ export const ChunkWasMovedC = t.type({
 })
 export type ChunkWasMoved = t.TypeOf<typeof ChunkWasMovedC>
 
-// const ClientRectC = new t.Type<ClientRect, string, ClientRect>(
-//   'ClientRect',
-//   (u): u is ClientRect => u instanceof ClientRect,
-//   (input, context) => {
-//     if (typeof input === 'object'
-//       && input.bottom !== undefined
-//       && input.height !== undefined
-//       && input.left !== undefined
-//       && input.right !== undefined
-//       && input.top !== undefined
-//       && input.width !== undefined) {
-//       return t.success(input)
-//     }
-//     return t.failure(input, context)
-//   },
-//   (a) => JSON.stringify(a),
-// )
-// ClientRectC.decode = (i) => {
-//   let str
-//   try {
-//     str = JSON.stringify(i)
-//   }
-//   catch {
-//     return t.failure(i)
-//   }
-//   return t.success(str)
-// }
+class ClientRectC extends t.Type<ClientRect> {
+  readonly _tag: 'ClientRect' = 'ClientRect'
+  constructor() {
+    super(
+      'ClientRect',
+      (u): u is ClientRect => u instanceof ClientRect,
+      (i, c) => (this.is(i) ? t.success(i) : t.failure(i, c)),
+      t.identity
+    )
+  }
+}
 
 export const DraggedChunkC = t.type({
   deltaX: t.number,
   deltaY: t.number,
-  bcr: t.any,
+  bcr: new ClientRectC(),
   key: t.union([
     t.literal('n'),
     t.literal('er1'),
@@ -90,9 +74,7 @@ export const DraggedChunkC = t.type({
   x: t.number,
   y: t.number,
 })
-export interface DraggedChunk extends t.TypeOf<typeof DraggedChunkC> {
-  bcr: ClientRect
-}
+export type DraggedChunk = t.TypeOf<typeof DraggedChunkC>
 
 export interface PageContext extends NextPageContext {
   req?: IncomingMessage & { chunks?: Chunks }
