@@ -121,11 +121,12 @@ const Name = (props: Props) => {
   useEffect(() => {
     socket.on('action', handleSocketEvent)
     window.addEventListener('resize', handleWindowResize)
+    handleWindowResize()
     return () => {
       socket.off('action', handleSocketEvent)
       window.removeEventListener('resize', handleWindowResize)
     }
-  })
+  }, [])
   const chunks = Object.values(state.chunks)
   if (chunks.length === 0) {
     return null
@@ -164,6 +165,7 @@ const Name = (props: Props) => {
         font-size: 108px;
         transform: scale(${state.adjustment});
         transform-origin: ${state.xOffset}px 0;
+        transition: transform 0.2s;
       `}</style>
     </div>
   )
