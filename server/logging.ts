@@ -1,5 +1,10 @@
+import { Request, Response } from 'express'
 import morgan from 'morgan'
 import { Socket } from '../types'
+
+const SKIP_LOGGING_THESE_PATHS: string[] = [
+  '/css/bco_iphone.css',
+]
 
 export const logSocketEvent = (action: string, socket: Socket): void => {
   let remoteAddress = socket.client.conn.remoteAddress
@@ -14,6 +19,9 @@ export const logSocketEvent = (action: string, socket: Socket): void => {
     remote_address: remoteAddress,
   }))
 }
+
+const skip = (req: Request, _res: Response): boolean =>
+  SKIP_LOGGING_THESE_PATHS.indexOf(req.path) !== -1
 
 export const morganMiddleware = () => morgan((tokens, req, res) => {
   const httpStatus = tokens.status(req, res)
@@ -43,4 +51,4 @@ export const morganMiddleware = () => morgan((tokens, req, res) => {
     },
     message: `${ip} "${method} ${url} HTTP/${httpVersion}" ${httpStatus}`,
   })
-})
+}, { skip })
