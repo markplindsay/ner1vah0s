@@ -20,8 +20,10 @@ const Index = (props: Props) => (
       <Name chunks={props.chunks} />
     }
     <style global jsx>{`
+      * {
+        box-sizing: border-box;
+      }
       body {
-        background: white;
         margin: 0;
       }
     `}</style>

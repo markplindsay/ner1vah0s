@@ -1,6 +1,7 @@
-import NameChunk from './NameChunk'
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import React, { useEffect, useReducer, useRef } from 'react'
 import io from 'socket.io-client'
+import NameChunk from './NameChunk'
 import {
   Actions,
   Chunk,
@@ -121,10 +122,12 @@ const Name = (props: Props) => {
   useEffect(() => {
     socket.on('action', handleSocketEvent)
     window.addEventListener('resize', handleWindowResize)
+    disableBodyScroll(document.body)
     handleWindowResize()
     return () => {
       socket.off('action', handleSocketEvent)
       window.removeEventListener('resize', handleWindowResize)
+      enableBodyScroll(document.body)
     }
   }, [])
   const chunks = Object.values(state.chunks)
@@ -159,7 +162,6 @@ const Name = (props: Props) => {
         font-weight: bold;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         position: relative;
-        z-index: 2;
         width: 768px;
         height: 768px;
         font-size: 108px;

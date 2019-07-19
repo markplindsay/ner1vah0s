@@ -5,6 +5,7 @@
   },
   "description": "N ER1 V AH0 S",
   "dependencies": {
+    "body-scroll-lock": "^2.6.4",
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "fp-ts": "^2.0.1",
@@ -19,6 +20,7 @@
     "socket.io-client": "^2.2.0"
   },
   "devDependencies": {
+    "@types/body-scroll-lock": "^2.6.0",
     "@types/enzyme": "^3.9.4",
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/express": "^4.17.0",

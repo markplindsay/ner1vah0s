@@ -49,17 +49,8 @@ const NameChunk = (props: Props) => {
         <style jsx>{`
           display: block;
           position: absolute;
-          cursor: default;
-          -webkit-touch-callout: none;
-          -webkit-user-select: none;
-          -khtml-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
           user-select: none;
-          cursor: move;
           cursor: ${cursor};
-          cursor: -moz-${cursor};
-          cursor: -webkit-${cursor};
           color: ${props.chunk.color};
           transform: translate(${props.chunk.x}px, ${props.chunk.y}px);
        `}</style> 
