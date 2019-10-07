@@ -67,11 +67,11 @@ const windowWasResized = (h: number, w: number): WindowWasResized => {
   const width = Math.min(BASE_LENGTH, w)
   const length = Math.min(height, width)
   const adjustment = length / BASE_LENGTH
-  const xOffset = w - length
+  const marginLeft = (w - length) / 2
   const action: WindowWasResized = {
     payload: {
       adjustment,
-      xOffset,
+      marginLeft,
     },
     type: 'WINDOW_WAS_RESIZED',
   }
@@ -98,7 +98,8 @@ const reducer = (state: State, action: Actions): State => {
       return {
         ...state,
         adjustment: action.payload.adjustment,
-        xOffset: action.payload.xOffset,
+        isReady: true,
+        marginLeft: action.payload.marginLeft,
       }
     default:
       throw new Error()
@@ -110,7 +111,8 @@ const Name = (props: Props) => {
   const initialState: State = {
     adjustment: 1,
     chunks: props.chunks,
-    xOffset: 256,
+    isReady: false,
+    marginLeft: 256,
   }
   const [state, dispatch] = useReducer(reducer, initialState)
   const handleSocketEvent = (action: ChunkWasMoved) => {
@@ -141,7 +143,7 @@ const Name = (props: Props) => {
   }
   return (
     <div
-      className="name"
+      className={state.isReady ? 'name is-ready' : 'name'}
       ref={ref}
     >
       {chunks.map((chunk: Chunk | undefined) => {
@@ -157,17 +159,22 @@ const Name = (props: Props) => {
         )
       })}
       <style jsx>{`
-        display: block;
-        margin: 0 auto 0 auto;
-        font-weight: bold;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        position: relative;
-        width: 768px;
-        height: 768px;
-        font-size: 108px;
-        transform: scale(${state.adjustment});
-        transform-origin: ${state.xOffset}px 0;
-        transition: transform 0.2s;
+        .name {
+          display: block;
+          font-weight: bold;
+          font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          position: relative;
+          width: 768px;
+          height: 768px;
+          font-size: 108px;
+          transform: scale(${state.adjustment});
+          transform-origin: top left;
+          margin-left: ${state.marginLeft}px;
+          visibility: hidden;
+        }
+        .name.is-ready {
+          visibility: visible;
+        }
       `}</style>
     </div>
   )
