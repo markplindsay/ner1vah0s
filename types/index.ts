@@ -93,7 +93,7 @@ export interface Socket extends BaseSocket {
 export const WindowWasResizedC = t.type({
   payload: t.type({
     adjustment: t.number,
-    xOffset: t.number,
+    marginLeft: t.number,
   }),
   type: t.literal('WINDOW_WAS_RESIZED'),
 })
@@ -102,7 +102,8 @@ export type WindowWasResized = t.TypeOf<typeof WindowWasResizedC>
 export const StateC = t.type({
   adjustment: t.number,
   chunks: ChunksC,
-  xOffset: t.number,
+  isReady: t.boolean,
+  marginLeft: t.number,
 })
 export type State = t.TypeOf<typeof StateC>
 
