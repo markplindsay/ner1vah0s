@@ -53,7 +53,7 @@ const NameChunk = (props: Props) => {
           cursor: ${cursor};
           color: ${props.chunk.color};
           transform: translate(${props.chunk.x}px, ${props.chunk.y}px);
-       `}</style> 
+        `}</style>
       </span>
     </DraggableCore>
   )

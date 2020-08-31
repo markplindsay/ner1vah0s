@@ -1,0 +1,8 @@
+FROM node:12
+WORKDIR /app
+COPY package*.json /app/
+RUN npm install
+COPY . /app/
+ENV NODE_ENV development
+CMD ["npm", "run", "dev"]
+EXPOSE 5000

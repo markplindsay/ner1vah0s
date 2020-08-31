@@ -1,9 +1,15 @@
-version: "3"
+version: '3'
 services:
   ner1vah0s:
-    build: .
-    command: ["npm", "run", "dev"]
-    environment:
-      - "NODE_ENV=development"
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
     ports:
-      - "5000:5000"
+      - '5000:5000'
+    volumes:
+      - ./components:/app/components
+      - ./lib:/app/lib
+      - ./pages:/app/pages
+      - ./server:/app/server
+      - ./types:/app/types
+

@@ -12,19 +12,19 @@ import {
   State,
   WindowWasResized,
 } from '../types'
-import { getBoundX, getBoundY, getRandomColor } from '../utils'
+import { getBoundX, getBoundY, getRandomColor } from '../lib'
 
 const BASE_LENGTH: number = 768
 const socket = io.connect('/')
 
 type Props = {
-  chunks: Chunks,
+  chunks: Chunks
 }
 
 const chunkWasDragged = (
   draggedChunk: DraggedChunk,
   adjustment: number,
-  nameEl: HTMLDivElement,
+  nameEl: HTMLDivElement
 ): ChunkWasDragged => {
   const nameBcr = nameEl.getBoundingClientRect()
   const action: ChunkWasDragged = {
@@ -36,14 +36,14 @@ const chunkWasDragged = (
         draggedChunk.deltaX,
         draggedChunk.bcr,
         nameBcr,
-        adjustment,
+        adjustment
       ),
       y: getBoundY(
         draggedChunk.y,
         draggedChunk.deltaY,
         draggedChunk.bcr,
         nameBcr,
-        adjustment,
+        adjustment
       ),
     },
     type: 'CHUNK_WAS_DRAGGED',
@@ -52,9 +52,7 @@ const chunkWasDragged = (
   return action
 }
 
-const chunkWasMoved = (
-  chunk: Chunk,
-): ChunkWasMoved => {
+const chunkWasMoved = (chunk: Chunk): ChunkWasMoved => {
   const action: ChunkWasMoved = {
     payload: chunk,
     type: 'CHUNK_WAS_MOVED',
@@ -124,12 +122,11 @@ const Name = (props: Props) => {
   useEffect(() => {
     socket.on('action', handleSocketEvent)
     window.addEventListener('resize', handleWindowResize)
-    disableBodyScroll(document.body)
     handleWindowResize()
     return () => {
+      enableBodyScroll(document.body)
       socket.off('action', handleSocketEvent)
       window.removeEventListener('resize', handleWindowResize)
-      enableBodyScroll(document.body)
     }
   }, [])
   const chunks = Object.values(state.chunks)
@@ -141,22 +138,24 @@ const Name = (props: Props) => {
       dispatch(chunkWasDragged(draggedChunk, state.adjustment, ref.current))
     }
   }
+  const handleTouchEnter = () => {
+    disableBodyScroll(document.body)
+  }
+  const handleTouchLeave = () => {
+    enableBodyScroll(document.body)
+  }
   return (
     <div
       className={state.isReady ? 'name is-ready' : 'name'}
+      onTouchStart={handleTouchEnter}
+      onTouchEnd={handleTouchLeave}
       ref={ref}
     >
       {chunks.map((chunk: Chunk | undefined) => {
         if (chunk === undefined) {
           return null
         }
-        return (
-          <NameChunk
-            chunk={chunk}
-            key={chunk.key}
-            onDrag={handleDrag}
-          />
-        )
+        return <NameChunk chunk={chunk} key={chunk.key} onDrag={handleDrag} />
       })}
       <style jsx>{`
         .name {
@@ -181,3 +180,4 @@ const Name = (props: Props) => {
 }
 
 export default Name
+

@@ -54,6 +54,11 @@
   },
   "main": "dist/server/index.js",
   "name": "ner1vah0s",
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
   "scripts": {
     "build": "next build && tsc --project tsconfig.server.json",
     "dev": "nodemon",
@@ -62,3 +67,4 @@
   },
   "version": "4.0.0"
 }
+
