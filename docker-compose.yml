@@ -4,6 +4,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-dev
+    env_file:
+      - .env
+    environment:
+      - 'BOM_TOOL_HOST=https://staging-bom-tool-ng.octopart.com'
     ports:
       - '5000:5000'
     volumes:
