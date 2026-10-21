@@ -117,7 +117,3 @@ function getChunks(): Chunks {
   }
   return chunks
 }
-
-process.on('SIGINT', () => {
-  process.exit()
-})

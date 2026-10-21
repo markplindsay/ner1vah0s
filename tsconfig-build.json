@@ -14,7 +14,7 @@
     "rootDir": "./src",
     "strict": true
   },
-  "exclude": ["dist", "src/**/*.test.ts"],
+  "exclude": ["dist", "eslint.config.ts", "src/**/*.test.ts"],
   "tsc-alias": {
     "resolveFullPaths": true
   }

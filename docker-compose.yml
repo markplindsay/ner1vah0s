@@ -1,9 +1,8 @@
-version: "3"
 services:
   ner1vah0s:
     build: .
-    command: ["npm", "run", "dev"]
+    command: ['npm', 'run', 'dev']
     environment:
-      - "NODE_ENV=development"
+      - 'NODE_ENV=development'
     ports:
-      - "5000:5000"
+      - '5000:5000'
