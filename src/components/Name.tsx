@@ -2,13 +2,11 @@
 
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import { useCallback, useEffect, useMemo, useReducer, useRef } from 'react'
-import { getBoundX, getBoundY, getPort, getRandomColor } from 'src/lib'
+import { getBoundX, getBoundY, getRandomColor } from 'src/lib'
 import type { Chunk, Chunks } from 'src/server'
 import NameChunk from './NameChunk'
 
 const BASE_LENGTH: number = 768
-
-const websocket = new WebSocket(`http://localhost:${getPort()}/api/ws`)
 
 export type DraggedChunk = {
   deltaX: number
@@ -51,7 +49,6 @@ function chunkWasDragged(
     },
     type: 'CHUNK_WAS_DRAGGED',
   }
-  websocket.send(JSON.stringify(chunkWasDraggedAction))
   return chunkWasDraggedAction
 }
 
@@ -131,6 +128,11 @@ function reducer(state: State, action: Action): State {
 }
 
 export default function Name({ chunks }: { chunks: Chunks }) {
+  const websocketRef = useRef<WebSocket | null>(null)
+  useEffect(() => {
+    websocketRef.current = new WebSocket(`${window.location.origin}/api/ws`)
+  }, [])
+
   const ref = useRef<HTMLDivElement>(null)
 
   const initialState: State = {
@@ -155,20 +157,30 @@ export default function Name({ chunks }: { chunks: Chunks }) {
 
   const handleDrag = useCallback(
     (draggedChunk: DraggedChunk) => {
-      if (ref.current !== null) {
-        dispatch(chunkWasDragged(draggedChunk, state.adjustment, ref.current))
+      if (ref.current !== null && websocketRef.current !== null) {
+        const chunkWasDraggedAction = chunkWasDragged(
+          draggedChunk,
+          state.adjustment,
+          ref.current
+        )
+        websocketRef.current.send(JSON.stringify(chunkWasDraggedAction))
+        dispatch(chunkWasDraggedAction)
       }
     },
     [state.adjustment]
   )
 
   useEffect(() => {
-    websocket.addEventListener('message', handleMessageEvent)
+    if (websocketRef.current !== null) {
+      websocketRef.current.addEventListener('message', handleMessageEvent)
+    }
     window.addEventListener('resize', handleWindowResize)
     disableBodyScroll(document.body)
     handleWindowResize()
     return () => {
-      websocket.removeEventListener('message', handleMessageEvent)
+      if (websocketRef.current !== null) {
+        websocketRef.current.removeEventListener('message', handleMessageEvent)
+      }
       window.removeEventListener('resize', handleWindowResize)
       enableBodyScroll(document.body)
     }

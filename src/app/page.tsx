@@ -1,9 +1,8 @@
 import { Metadata, Viewport } from 'next'
 import Name from 'src/components/Name'
-import { getPort } from 'src/lib'
 
 export default async function Page() {
-  const response = await fetch(`http://localhost:${getPort()}/api/chunks`)
+  const response = await fetch('http://localhost:5000/api/chunks')
   const chunks = await response.json()
   return <Name chunks={chunks} />
 }

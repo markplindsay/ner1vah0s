@@ -30,10 +30,6 @@ export function getBoundY(
   return boundY
 }
 
-export function getPort(): number {
-  return parseInt(process.env.PORT || '5000', 10)
-}
-
 export function getRandomColor(): string {
   const hex = Math.random().toString(16).slice(2, 8).toUpperCase()
   return `#${hex}`

@@ -2,7 +2,7 @@ import express from 'express'
 import http from 'http'
 import next from 'next'
 import { WebSocketServer } from 'ws'
-import { getPort, getRandomColor } from 'src/lib'
+import { getRandomColor } from 'src/lib'
 import type { ChunkWasMovedAction } from 'src/components/Name'
 
 const dev = process.env.NODE_ENV !== 'production'
@@ -42,7 +42,7 @@ nextApp.prepare().then(() => {
   })
 
   server.on('upgrade', (req, socket, head) => {
-    const { pathname } = new URL(req.url!, `http://localhost:${getPort()}`)
+    const { pathname } = new URL(req.url!, 'http://localhost:5000')
     switch (pathname) {
       case '/_next/hmr':
         nextApp.getUpgradeHandler()(req, socket, head)
@@ -57,9 +57,9 @@ nextApp.prepare().then(() => {
     }
   })
 
-  server.listen(getPort(), () => {
+  server.listen(5000, () => {
     if (dev) {
-      console.log(`> Server listening on ${getPort()} as development`)
+      console.log('> Server listening on 5000 as development')
     }
   })
 })
